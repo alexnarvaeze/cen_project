@@ -20,7 +20,7 @@ public class main {
         window.setVisible(true);
 
 
-        // gamePanel.setupGame();
+        gamePanel.setupGame();
         gamePanel.startGameThread();
         
 
