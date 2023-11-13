@@ -33,13 +33,15 @@ public class GamePanel extends JPanel implements Runnable {
 
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
-    Thread gameThread;
+    public Sound music = new Sound();
+    public Sound soundEffect = new Sound();
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
+    public UserInterface ui = new UserInterface(this);
+    Thread gameThread;
     
-    // set player's default position
+    // entity and object
     public Player player = new Player(this, keyH);
-
     public SuperObject obj[] = new SuperObject[10];
 
     public GamePanel() {
@@ -58,6 +60,8 @@ public class GamePanel extends JPanel implements Runnable {
 
         gameThread = new Thread(this);
         gameThread.start();
+        music.play(0, true);
+        music.loop();
     }
 
     @Override
@@ -105,7 +109,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
         player.draw(g2);
+        ui.draw(g2);
         g2.dispose();
     }
-
 }

@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 
 import main.GamePanel;
 import main.KeyHandler;
+import main.UtilityTools;
 
 public class Player extends Entity {
     GamePanel gp;
@@ -16,6 +17,7 @@ public class Player extends Entity {
 
     public final int screenX;
     public final int screenY;
+    public int hasKey = 0;
 
     public Player(GamePanel gp, KeyHandler keyH) {
 
@@ -25,7 +27,13 @@ public class Player extends Entity {
         screenX = gp.screenWidth / 2 - (gp.tileSize / 2);
         screenY = gp.screenHeight / 2 - (gp.tileSize / 2);
 
-        solidArea = new Rectangle(12, 14, 12, 18);
+        solidArea = new Rectangle();
+        solidArea.x = 16;
+        solidArea.y = 18;
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
+        solidArea.width = 14;
+        solidArea.height = 16; 
 
         setDefaultValues();
         getPlayerImage();
@@ -39,19 +47,27 @@ public class Player extends Entity {
     }
 
     public void getPlayerImage() {
-        try {
-            up1 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_up_1.png"));
-            up2 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_up_2.png"));
-            down1 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_down_1.png"));
-            down2 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_down_2.png"));
-            right1 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_right_1.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_right_2.png"));
-            left1 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_left_1.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_left_2.png"));
+        up1 = setup("player_up_1");
+        up2 = setup("player_up_2");
+        down1 = setup("player_down_1");
+        down2 = setup("player_down_2");
+        right1 = setup("player_right_1");
+        right2 = setup("player_right_2");
+        left1 = setup("player_left_1");
+        left2 = setup("player_left_2");
+    }
 
+    public BufferedImage setup(String imageName) {
+        UtilityTools uTools = new UtilityTools();
+        BufferedImage image = null;
+
+        try {
+            image = ImageIO.read(getClass().getResourceAsStream("/res/player/" + imageName + ".png"));
+            image = uTools.scaleImage(image, gp.tileSize, gp.tileSize);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return image;
     }
 
     public void update() {
@@ -69,6 +85,10 @@ public class Player extends Entity {
             // Check tile collision
             collisionOn = false;
             gp.cChecker.checkTile(this);
+
+            // Check object collision
+            int objIndex = gp.cChecker.checkObject(this, true);
+            pickUpObj(objIndex);
 
             // If collision is false, player can move
             if(collisionOn == false) {
@@ -105,6 +125,41 @@ public class Player extends Entity {
             }
         }
 
+    }
+
+    public void pickUpObj(int i) {
+        if (i != 999) {
+            String objName = gp.obj[i].name;
+
+            switch(objName) {
+                case "Key":
+                    gp.soundEffect.play(1, false);
+                    hasKey++;
+                    gp.obj[i] = null;
+                    gp.ui.showMessage("You found a key.");
+                    break;
+                case "Door":
+                    if (hasKey > 0) {
+                        gp.soundEffect.play(3, false);
+                        gp.obj[i] = null;
+                        hasKey--;
+                        gp.ui.showMessage("The door opened.");
+                    } else
+                        gp.ui.showMessage("There appears to be a keyhole.");
+                    break;
+                case "Boots":
+                    gp.soundEffect.play(2, false);
+                    speed += 1;
+                    gp.obj[i] = null;
+                    gp.ui.showMessage("Hermes has blessed you.");
+                    break;
+                case "Chest":
+                    gp.ui.gameFinished = true;
+                    gp.music.stop();
+                    gp.soundEffect.play(4, false);
+                    break;
+            }
+        }
     }
 
     public void draw(Graphics2D g2) {
@@ -145,7 +200,7 @@ public class Player extends Entity {
                 }
                 break;
         }
-        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+        g2.drawImage(image, screenX, screenY, null);
     }
 
 }
