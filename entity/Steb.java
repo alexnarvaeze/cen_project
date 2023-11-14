@@ -12,6 +12,7 @@ public class Steb extends Entity { // steb is the wizard, name is cause i made h
         speed = 1;
 
         getStebImage();
+        setDialogue();
     }
 
     public void getStebImage() {
@@ -23,6 +24,13 @@ public class Steb extends Entity { // steb is the wizard, name is cause i made h
         right2 = setup("npcs/wizard_right_2");
         left1 = setup("npcs/wizard_left_1");
         left2 = setup("npcs/wizard_left_2");
+    }
+
+    public void setDialogue() {
+        dialogues[0] = "Greetings youngling.";
+        dialogues[1] = "My name is Steb. Welcome to the \nisland.";
+        dialogues[2] = "Be careful when stepping inside \nthe forest.";
+        dialogues[3] = "There is an adventure around the \n corner.";
     }
 
     public void setAction() {
@@ -44,5 +52,9 @@ public class Steb extends Entity { // steb is the wizard, name is cause i made h
 
             actionCounter = 0;
         }
+    }
+
+    public void speak() {
+        super.speak();
     }
 }
