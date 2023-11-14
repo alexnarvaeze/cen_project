@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
+import entity.Entity;
 import entity.Player;
 import object.SuperObject;
 import tile.TileManager;
@@ -32,7 +33,7 @@ public class GamePanel extends JPanel implements Runnable {
     int fps = 60;
 
     TileManager tileM = new TileManager(this);
-    KeyHandler keyH = new KeyHandler();
+    KeyHandler keyH = new KeyHandler(this);
     public Sound music = new Sound();
     public Sound soundEffect = new Sound();
     public CollisionChecker cChecker = new CollisionChecker(this);
@@ -43,6 +44,12 @@ public class GamePanel extends JPanel implements Runnable {
     // entity and object
     public Player player = new Player(this, keyH);
     public SuperObject obj[] = new SuperObject[10];
+    public Entity npc[] = new Entity[10];
+
+    // game state
+    public int gameState;
+    public final int playState = 1;
+    public final int pauseState = 2;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -54,6 +61,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setupGame() {
         aSetter.setObject();
+        aSetter.setNPC();
+        gameState = playState;
     }
 
     public void startGameThread() {
@@ -88,7 +97,6 @@ public class GamePanel extends JPanel implements Runnable {
 
                 nextDrawTime += drawInterval;
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -96,19 +104,47 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        player.update();
+        if (gameState == playState) {
+            // Player
+            player.update();
+
+            // Npc
+            for (int i = 0; i < npc.length; i++) {
+                if (npc[i] != null) {
+                    npc[i].update();
+                }
+            }
+        }
+        if (gameState == pauseState) {
+            // nothing yet
+        }
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+
+        // Tile drawing
         tileM.draw(g2);
+
+        // Object drawing
         for(int i = 0; i < obj.length; i++) {
             if (obj[i] != null) {
                 obj[i].draw(g2, this);
             }
         }
+
+        // NPC Drawing
+        for (int i = 0; i < npc.length; i++) {
+            if (npc[i] != null) {
+                npc[i].draw(g2);
+            }
+        }
+
+        // Player drawing
         player.draw(g2);
+
+        // UI drawing
         ui.draw(g2);
         g2.dispose();
     }
