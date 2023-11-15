@@ -16,14 +16,14 @@ public class Steb extends Entity { // steb is the wizard, name is cause i made h
     }
 
     public void getStebImage() {
-        up1 = setup("npcs/wizard_up_1");
-        up2 = setup("npcs/wizard_up_2");
-        down1 = setup("npcs/wizard_down_1");
-        down2 = setup("npcs/wizard_down_2");
-        right1 = setup("npcs/wizard_right_1");
-        right2 = setup("npcs/wizard_right_2");
-        left1 = setup("npcs/wizard_left_1");
-        left2 = setup("npcs/wizard_left_2");
+        up1 = setup("npcs/wizard_up_1", gp.tileSize, gp.tileSize);
+        up2 = setup("npcs/wizard_up_2", gp.tileSize, gp.tileSize);
+        down1 = setup("npcs/wizard_down_1", gp.tileSize, gp.tileSize);
+        down2 = setup("npcs/wizard_down_2", gp.tileSize, gp.tileSize);
+        right1 = setup("npcs/wizard_right_1", gp.tileSize, gp.tileSize);
+        right2 = setup("npcs/wizard_right_2", gp.tileSize, gp.tileSize);
+        left1 = setup("npcs/wizard_left_1", gp.tileSize, gp.tileSize);
+        left2 = setup("npcs/wizard_left_2", gp.tileSize, gp.tileSize);
     }
 
     public void setDialogue() {
