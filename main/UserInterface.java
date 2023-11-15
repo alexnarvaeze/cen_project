@@ -6,14 +6,18 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+
+import object.ObjectHeart;
+import object.SuperObject;
 
 public class UserInterface {
     GamePanel gp;
     Graphics2D g2;
     Font Vengeance;
-    // BufferedImage keyImage;
+    BufferedImage heartFull, heartHalf, heartBlank;
     public boolean messageOn = false;
     public String message = "";
     int messageCounter = 0;
@@ -32,8 +36,12 @@ public class UserInterface {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // ObjectKey key = new ObjectKey(gp);
-        // keyImage = key.image;
+        
+        // Create HUD objects
+        SuperObject heart = new ObjectHeart(gp);
+        heartFull = heart.image;
+        heartHalf = heart.image2;
+        heartBlank = heart.image3;
     }
 
     public void showMessage(String text) {
@@ -54,17 +62,48 @@ public class UserInterface {
         
         // play state
         if (gp.gameState == gp.playState) {
-            // do playstate stuff later
+            drawPlayerHearts();
         }
 
         // pause state
         if (gp.gameState == gp.pauseState) {
+            drawPlayerHearts();
             drawPauseScreen();
         }
 
         // dialogue state
         if(gp.gameState == gp.dialogueState) {
+            drawPlayerHearts();
             drawDialogueScreen();
+        }
+    }
+
+    public void drawPlayerHearts() {   
+        int x = gp.tileSize / 2;
+        int y = gp.tileSize / 2;
+        int i = 0;
+
+        // Draw max life
+        while(i < gp.player.maxLife / 2) {
+            g2.drawImage(heartBlank, x, y, null);
+            i++;
+            x += gp.tileSize;
+        }
+
+        // Reset values
+        x = gp.tileSize / 2;
+        y = gp.tileSize / 2;
+        i = 0;
+
+        // Draw current life
+        while (i < gp.player.life) {
+            g2.drawImage(heartHalf, x, y, null);
+            i++;
+            if (i < gp.player.life) {
+                g2.drawImage(heartFull, x, y, null);
+            }
+            i++;
+            x += gp.tileSize;
         }
     }
 
@@ -75,7 +114,7 @@ public class UserInterface {
 
         // set title name
         g2.setFont(g2.getFont().deriveFont(Font.BOLD,80F));
-        String text = "Big Game";
+        String text = "Soulbound Savior";
         int x = getCenteredText(text);
         int y = gp.tileSize*3;
 

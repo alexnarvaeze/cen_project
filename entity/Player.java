@@ -21,12 +21,12 @@ public class Player extends Entity {
         screenY = gp.screenHeight / 2 - (gp.tileSize / 2);
 
         solidArea = new Rectangle();
-        solidArea.x = 12;
+        solidArea.x = 8;
         solidArea.y = 16;
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
-        solidArea.width = 16;
-        solidArea.height = 16; 
+        solidArea.width = 32;
+        solidArea.height = 32; 
 
         setDefaultValues();
         getPlayerImage();
@@ -37,6 +37,10 @@ public class Player extends Entity {
         worldY = gp.tileSize * 21;
         speed = 4;
         direction = "down";
+        
+        // Player Status
+        maxLife = 6; // a half heart is 1 life, so 6 lives is 3 hearts
+        life = maxLife;
     }
 
     public void getPlayerImage() {
@@ -75,6 +79,11 @@ public class Player extends Entity {
             // Check NPC collision
             int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
             interactNPC(npcIndex);
+
+            // Check event
+            gp.eHandler.checkEvent();
+
+            gp.keyH.enterPressed = false;
 
             // If collision is false, player can move
             if(collisionOn == false) {
@@ -127,7 +136,6 @@ public class Player extends Entity {
                 gp.npc[i].speak();
             }
         }
-        gp.keyH.enterPressed = false;
     }
 
     public void draw(Graphics2D g2) {
