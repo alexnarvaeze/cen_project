@@ -1,5 +1,8 @@
 package entity;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -26,7 +29,7 @@ public class Player extends Entity {
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
         solidArea.width = 32;
-        solidArea.height = 32; 
+        solidArea.height = 32;
 
         setDefaultValues();
         getPlayerImage();
@@ -35,9 +38,11 @@ public class Player extends Entity {
     public void setDefaultValues() {
         worldX = gp.tileSize * 23;
         worldY = gp.tileSize * 21;
+        // worldX = gp.tileSize * 10;
+        // worldY = gp.tileSize * 13;
         speed = 4;
         direction = "down";
-        
+
         // Player Status
         maxLife = 6; // a half heart is 1 life, so 6 lives is 3 hearts
         life = maxLife;
@@ -53,8 +58,6 @@ public class Player extends Entity {
         left1 = setup("player/player_left_1");
         left2 = setup("player/player_left_2");
     }
-
-    
 
     public void update() {
         if (keyH.upPress == true || keyH.downPress == true || keyH.leftPress == true || keyH.rightPress == true) {
@@ -80,13 +83,16 @@ public class Player extends Entity {
             int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
             interactNPC(npcIndex);
 
+            // Check monster collision
+            int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
+            contactMonster(monsterIndex);
             // Check event
             gp.eHandler.checkEvent();
 
             gp.keyH.enterPressed = false;
 
             // If collision is false, player can move
-            if(collisionOn == false) {
+            if (collisionOn == false) {
                 switch (direction) {
                     case "up":
                         worldY -= speed;
@@ -103,7 +109,7 @@ public class Player extends Entity {
                     case "right":
                         worldX += speed;
                         break;
-                
+
                     default:
                         break;
                 }
@@ -119,22 +125,38 @@ public class Player extends Entity {
                 spriteCounter = 0;
             }
         }
-
+        if (invincible == true) {
+            invincibleCounter++;
+            if (invincibleCounter > 60) {
+                invincible = false;
+                invincibleCounter = 0;
+            }
+        }
     }
 
     public void pickUpObj(int i) {
         if (i != 999) {
-            
+
         }
     }
 
     public void interactNPC(int i) {
         if (i != 999) {
 
-            if(gp.keyH.enterPressed == true){
+            if (gp.keyH.enterPressed == true) {
                 gp.gameState = gp.dialogueState;
                 gp.npc[i].speak();
             }
+        }
+    }
+
+    public void contactMonster(int i) {
+        if (i != 999) {
+            if (invincible == false) {
+                life -= 1;
+                invincible = true;
+            }
+
         }
     }
 
@@ -176,7 +198,18 @@ public class Player extends Entity {
                 }
                 break;
         }
+        if (invincible == true) {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+        }
+
         g2.drawImage(image, screenX, screenY, null);
+
+        // reset alpha
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        // debug
+        // g2.setFont(new Font("Arial", Font.PLAIN, 26));
+        // g2.setColor(Color.white);
+        // g2.drawString("Invincible:" + invincibleCounter, 10, 400);
     }
 
 }

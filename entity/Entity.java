@@ -25,11 +25,14 @@ public class Entity {
     public int solidAreaDefaultX, solidAreaDefaultY;
     public boolean collisionOn = false;
     public int actionCounter = 0;
+    public boolean invincible = false;
+    public int invincibleCounter = 0;
     String dialogues[] = new String[20];
     int dialogueIndex = 0;
     public BufferedImage image, image2, image3;
     public String name;
     public boolean collision = false;
+    public int type; // 0 = player, 1 = npc, 2 = monster
 
     // Character Status
     public int maxLife;
@@ -39,16 +42,26 @@ public class Entity {
         this.gp = gp;
     }
 
-    public void setAction() {}
+    public void setAction() {
+    }
 
     public void update() {
         setAction();
         collisionOn = false;
         gp.cChecker.checkTile(this);
         gp.cChecker.checkObject(this, false);
-        gp.cChecker.checkPlayer(this);
+        gp.cChecker.checkEntity(this, gp.npc);
+        gp.cChecker.checkEntity(this, gp.monster);
+        boolean contactPlayer = gp.cChecker.checkPlayer(this);
 
-        if(collisionOn == false) {
+        if (this.type == 2 && contactPlayer == true) {
+            if (gp.player.invincible == false) {
+                gp.player.life -= 1;
+                gp.player.invincible = true;
+            }
+        }
+
+        if (collisionOn == false) {
             switch (direction) {
                 case "up":
                     worldY -= speed;
@@ -65,21 +78,21 @@ public class Entity {
                 case "right":
                     worldX += speed;
                     break;
-            
+
                 default:
                     break;
             }
         }
 
         spriteCounter++;
-            if (spriteCounter > 12) {
-                if (spriteNum == 1) {
-                    spriteNum = 2;
-                } else if (spriteNum == 2) {
-                    spriteNum = 1;
-                }
-                spriteCounter = 0;
+        if (spriteCounter > 12) {
+            if (spriteNum == 1) {
+                spriteNum = 2;
+            } else if (spriteNum == 2) {
+                spriteNum = 1;
             }
+            spriteCounter = 0;
+        }
     }
 
     public void draw(Graphics2D g2) {
@@ -87,46 +100,46 @@ public class Entity {
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
         int screenY = worldY - gp.player.worldY + gp.player.screenY;
 
-        if (worldX + gp.tileSize > gp.player.worldX - gp.player.screenX && 
-            worldX - gp.tileSize < gp.player.worldX + gp.player.screenX && 
-            worldY + gp.tileSize > gp.player.worldY - gp.player.screenY && 
-            worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
-                switch (direction) {
-                    case "up":
-                        if (spriteNum == 1) {
-                            image = up1;
-                        }
-                        if (spriteNum == 2) {
-                            image = up2;
-                        }
-                        break;
-                    case "down":
-                        if (spriteNum == 1) {
-                            image = down1;
-                        }
-                        if (spriteNum == 2) {
-                            image = down2;
-                        }
-                        break;
-                    case "right":
-                        if (spriteNum == 1) {
-                            image = right1;
-                        }
-                        if (spriteNum == 2) {
-                            image = right2;
-                        }
-                        break;
-                    case "left":
-                        if (spriteNum == 1) {
-                            image = left1;
-                        }
-                        if (spriteNum == 2) {
-                            image = left2;
-                        }
-                        break;
-                }
-                g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);                
-            } 
+        if (worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
+                worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
+                worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
+                worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
+            switch (direction) {
+                case "up":
+                    if (spriteNum == 1) {
+                        image = up1;
+                    }
+                    if (spriteNum == 2) {
+                        image = up2;
+                    }
+                    break;
+                case "down":
+                    if (spriteNum == 1) {
+                        image = down1;
+                    }
+                    if (spriteNum == 2) {
+                        image = down2;
+                    }
+                    break;
+                case "right":
+                    if (spriteNum == 1) {
+                        image = right1;
+                    }
+                    if (spriteNum == 2) {
+                        image = right2;
+                    }
+                    break;
+                case "left":
+                    if (spriteNum == 1) {
+                        image = left1;
+                    }
+                    if (spriteNum == 2) {
+                        image = left2;
+                    }
+                    break;
+            }
+            g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+        }
     }
 
     public BufferedImage setup(String imagePath) {
@@ -143,25 +156,25 @@ public class Entity {
     }
 
     public void speak() {
-        if(dialogues[dialogueIndex] == null) {
+        if (dialogues[dialogueIndex] == null) {
             dialogueIndex = 0;
         }
         gp.ui.currentDialogue = dialogues[dialogueIndex];
         dialogueIndex++;
 
-        switch(gp.player.direction) {
-        case "up":
+        switch (gp.player.direction) {
+            case "up":
                 direction = "down";
                 break;
-        case "down":
+            case "down":
                 direction = "up";
                 break;
-        case "right":
+            case "right":
                 direction = "left";
                 break;
-        case "left":
+            case "left":
                 direction = "right";
                 break;
         }
     }
-} 
+}

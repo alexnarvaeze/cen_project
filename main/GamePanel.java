@@ -43,11 +43,12 @@ public class GamePanel extends JPanel implements Runnable {
     public UserInterface ui = new UserInterface(this);
     public EventHandler eHandler = new EventHandler(this);
     Thread gameThread;
-    
+
     // entity and object
     public Player player = new Player(this, keyH);
     public Entity obj[] = new Entity[10];
     public Entity npc[] = new Entity[10];
+    public Entity monster[] = new Entity[20];
     ArrayList<Entity> entityList = new ArrayList<>();
 
     // game state
@@ -68,6 +69,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void setupGame() {
         aSetter.setObject();
         aSetter.setNPC();
+        aSetter.setMonster();
         gameState = titleState;
     }
 
@@ -120,6 +122,13 @@ public class GamePanel extends JPanel implements Runnable {
                     npc[i].update();
                 }
             }
+
+            for (int i = 0; i < monster.length; i++) {
+                if (monster[i] != null) {
+                    monster[i].update();
+                }
+            }
+
         }
         if (gameState == pauseState) {
             // nothing yet
@@ -131,13 +140,11 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         // title screen
-        if(gameState == titleState) {
+        if (gameState == titleState) {
             ui.draw(g2);
-        } 
+        }
         // everything else
         else {
-
-        
 
             // Tile drawing
             tileM.draw(g2);
@@ -157,6 +164,12 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
 
+            for (int i = 0; i < monster.length; i++) {
+                if (monster[i] != null) {
+                    entityList.add(monster[i]);
+                }
+            }
+
             Collections.sort(entityList, new Comparator<Entity>() {
 
                 @Override
@@ -164,7 +177,7 @@ public class GamePanel extends JPanel implements Runnable {
                     int result = Integer.compare(e1.worldY, e2.worldY);
                     return result;
                 }
-                
+
             });
 
             // Draw Entities
