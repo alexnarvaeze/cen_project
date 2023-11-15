@@ -10,8 +10,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
+import entity.Entity;
 import object.ObjectHeart;
-import object.SuperObject;
 
 public class UserInterface {
     GamePanel gp;
@@ -38,7 +38,7 @@ public class UserInterface {
         }
         
         // Create HUD objects
-        SuperObject heart = new ObjectHeart(gp);
+        Entity heart = new ObjectHeart(gp);
         heartFull = heart.image;
         heartHalf = heart.image2;
         heartBlank = heart.image3;

@@ -1,20 +1,13 @@
 package object;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
+import entity.Entity;
 import main.GamePanel;
-public class ObjectKey extends SuperObject {
-    GamePanel gp;
+public class ObjectKey extends Entity {
 
     public ObjectKey(GamePanel gp) {
-        this.gp = gp;
+        super(gp);
         
         name = "Key";
-        try {
-            image = ImageIO.read(getClass().getResourceAsStream("/res/objects/key.png"));
-            uTools.scaleImage(image, gp.tileSize, gp.tileSize);
-        } catch(IOException e) {
-            e.printStackTrace(); 
-        }
+        down1 = setup("/objects/key");
     }
 }
