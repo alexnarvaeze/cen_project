@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import main.GamePanel;
 import main.KeyHandler;
+import object.ObjectFireball;
 import object.ObjectKey;
 import object.ObjectShieldWood;
 import object.ObjectSwordNormal;
@@ -65,6 +66,7 @@ public class Player extends Entity {
         coin = 0;
         currentWeapon = new ObjectSwordNormal(gp);
         currentShield = new ObjectShieldWood(gp);
+        projectile = new ObjectFireball(gp);
         attack = getAttack(); // total attack value is decided by strength * weapon
         defense = getDefense(); // total defense value is decided by dexterity * shield
     }
@@ -154,24 +156,11 @@ public class Player extends Entity {
             // If collision is false, player can move
             if (collisionOn == false && keyH.enterPressed == false) {
                 switch (direction) {
-                    case "up":
-                        worldY -= speed;
-                        break;
-
-                    case "down":
-                        worldY += speed;
-                        break;
-
-                    case "left":
-                        worldX -= speed;
-                        break;
-
-                    case "right":
-                        worldX += speed;
-                        break;
-
-                    default:
-                        break;
+                    case "up": worldY -= speed; break;
+                    case "down": worldY += speed; break;
+                    case "left": worldX -= speed; break;
+                    case "right": worldX += speed; break;
+                    default: break;
                 }
             }
 
@@ -195,12 +184,26 @@ public class Player extends Entity {
                 spriteCounter = 0;
             }
         }
+
+        if(gp.keyH.shotKeyPressed == true && projectile.alive == false && shotAvailableCounter == 30) {
+            // set default coordinates, direction and user
+            projectile.set(worldX, worldY, direction, true, this);
+
+            // add it to the list
+            gp.projectileList.add(projectile);
+            shotAvailableCounter = 0;
+        }
+
         if (invincible == true) {
             invincibleCounter++;
             if (invincibleCounter > 60) {
                 invincible = false;
                 invincibleCounter = 0;
             }
+        }
+
+        if(shotAvailableCounter < 30) {
+            shotAvailableCounter++;
         }
     }
 
@@ -232,7 +235,7 @@ public class Player extends Entity {
             solidArea.height = attackArea.height;
             // Check mosnter collision
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
-            damageMonster(monsterIndex);
+            damageMonster(monsterIndex, attack);
 
             worldX = currentWorldX;
             worldY = currentWorldY;
@@ -274,11 +277,12 @@ public class Player extends Entity {
 
     public void contactMonster(int i) {
         if (i != 999) {
-            if (invincible == false) {
+            if (invincible == false && gp.monster[i].dying == false) {
                 gp.soundEffect.play(6, false);
                 int damage = gp.monster[i].attack - defense;
-                if (damage < 0)
+                if (damage < 0){
                     damage = 0;
+                }
                 life -= damage;
                 invincible = true;
             }
@@ -286,7 +290,7 @@ public class Player extends Entity {
         }
     }
 
-    public void damageMonster(int i) {
+    public void damageMonster(int i, int attack) {
         if(i != 999) {
             if(gp.monster[i].invincible == false) {
                 gp.soundEffect.play(5, false);
