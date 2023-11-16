@@ -236,8 +236,15 @@ public class Player extends Entity {
         if (shotAvailableCounter < 30) {
             shotAvailableCounter++;
         }
+        if(life > maxLife) {
+            life = maxLife;
+        }
+        if(mana > maxMana) {
+            mana = maxMana;
+        }
         if (life <= 0) {
             gp.gameState = gp.gameOverState;
+            gp.ui.commandNum = -1;
             gp.soundEffect.play(10, false);
         }
     }
