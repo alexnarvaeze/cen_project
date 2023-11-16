@@ -1,4 +1,4 @@
-package main.monster;
+package monster;
 
 import java.util.Random;
 
@@ -13,11 +13,14 @@ public class MON_GreenSlime extends Entity {
         super(gp);
         this.gp = gp;
         
-        type = 2;
+        type = typeMonster;
         name = "Green Slime";
         speed = 1;
         maxLife = 4;
         life = maxLife;
+        attack = 5;
+        defense = 0;
+        exp = 2;
 
         solidArea.x = 3;
         solidArea.y = 18;
@@ -62,4 +65,8 @@ public class MON_GreenSlime extends Entity {
         }
     }
 
+    public void damageReaction() {
+        actionCounter = 0;
+        direction = gp.player.direction;
+    }
 }

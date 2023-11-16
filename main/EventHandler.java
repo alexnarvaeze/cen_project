@@ -72,17 +72,20 @@ public class EventHandler {
 
     public void damagePit(int col, int row, int gameState) {
         gp.gameState = gameState;
+        gp.soundEffect.play(6, false);
         gp.ui.currentDialogue = "You fell into a pit...";
         gp.player.life -= 1;
-        // eventRect[col][row].eventDone = true;
         canTouchEvent = false;
     }
 
     public void healingPool(int col, int row, int gameState) {
         if (gp.keyH.enterPressed == true) {
             gp.gameState = gameState;
+            gp.player.attackCancel = true;
+            gp.soundEffect.play(2, false);
             gp.ui.currentDialogue = "You feel refreshed.\nYour life has been recovered.";
             gp.player.life = gp.player.maxLife;
+            gp.aSetter.setMonster();
         }
     }
 }
