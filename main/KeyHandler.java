@@ -22,22 +22,22 @@ public class KeyHandler implements KeyListener {
         int code = e.getKeyCode();
 
         // title state
-        if(gp.gameState == gp.titleState) {
+        if (gp.gameState == gp.titleState) {
             titleState(code);
         }
-        
+
         // play state
-        else if(gp.gameState == gp.playState){
+        else if (gp.gameState == gp.playState) {
             playState(code);
         }
 
         // pause state
-        else if(gp.gameState == gp.pauseState) {
+        else if (gp.gameState == gp.pauseState) {
             pauseState(code);
         }
 
         // dialogue state
-        else if(gp.gameState == gp.dialogueState) {
+        else if (gp.gameState == gp.dialogueState) {
             dialogueState(code);
         }
 
@@ -45,31 +45,36 @@ public class KeyHandler implements KeyListener {
         else if (gp.gameState == gp.characterState) {
             characterState(code);
         }
+
+        // game over ststae
+        else if (gp.gameState == gp.gameOverState) {
+            gameOverState(code);
+        }
     }
 
     public void titleState(int code) {
         if (code == KeyEvent.VK_W) {
             gp.ui.commandNum--;
-            if(gp.ui.commandNum < 0) {
+            if (gp.ui.commandNum < 0) {
                 gp.ui.commandNum = 2;
             }
         }
         if (code == KeyEvent.VK_S) {
             downPress = true;
             gp.ui.commandNum++;
-            if(gp.ui.commandNum > 2) {
+            if (gp.ui.commandNum > 2) {
                 gp.ui.commandNum = 0;
             }
         }
         if (code == KeyEvent.VK_ENTER) {
-            if(gp.ui.commandNum == 0) {
+            if (gp.ui.commandNum == 0) {
                 gp.gameState = gp.playState;
                 // should start music too
             }
-            if(gp.ui.commandNum == 1) {
+            if (gp.ui.commandNum == 1) {
                 // add later
             }
-            if(gp.ui.commandNum == 2) {
+            if (gp.ui.commandNum == 2) {
                 System.exit(0);
             }
         }
@@ -103,13 +108,13 @@ public class KeyHandler implements KeyListener {
     }
 
     public void pauseState(int code) {
-        if(code == KeyEvent.VK_P) {
+        if (code == KeyEvent.VK_P) {
             gp.gameState = gp.playState;
         }
     }
 
     public void dialogueState(int code) {
-        if(code == KeyEvent.VK_ENTER) {
+        if (code == KeyEvent.VK_ENTER) {
             gp.gameState = gp.playState;
         }
     }
@@ -144,6 +149,32 @@ public class KeyHandler implements KeyListener {
         }
         if (code == KeyEvent.VK_ENTER) {
             gp.player.selectItem();
+        }
+    }
+
+    public void gameOverState(int code) {
+        if (code == KeyEvent.VK_W) {
+            gp.ui.commandNum--;
+            if (gp.ui.commandNum < 0) {
+                gp.ui.commandNum = 1;
+            }
+
+        }
+        if (code == KeyEvent.VK_S) {
+            gp.ui.commandNum++;
+            if (gp.ui.commandNum > 1) {
+                gp.ui.commandNum = 0;
+            }
+
+        }
+        if (code == KeyEvent.VK_ENTER) {
+            if (gp.ui.commandNum == 0) {
+                gp.gameState = gp.playState;
+                gp.retry();
+            } else if (gp.ui.commandNum == 1) {
+                gp.gameState = gp.titleState;
+                gp.restart();
+            }
         }
     }
 

@@ -42,7 +42,7 @@ public class UserInterface {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         // Create HUD objects
         Entity heart = new ObjectHeart(gp);
         heartFull = heart.image;
@@ -65,10 +65,10 @@ public class UserInterface {
         g2.setColor(Color.white);
 
         // title state
-        if(gp.gameState == gp.titleState) {
+        if (gp.gameState == gp.titleState) {
             drawTitleScreen();
         }
-        
+
         // play state
         if (gp.gameState == gp.playState) {
             drawPlayerHearts();
@@ -82,7 +82,7 @@ public class UserInterface {
         }
 
         // dialogue state
-        if(gp.gameState == gp.dialogueState) {
+        if (gp.gameState == gp.dialogueState) {
             drawPlayerHearts();
             drawDialogueScreen();
         }
@@ -92,15 +92,61 @@ public class UserInterface {
             drawCharacterScreen();
             drawInventory();
         }
+
+        // game over state
+        if (gp.gameState == gp.gameOverState) {
+            drawGameOverScreen();
+        }
+
     }
 
-    public void drawPlayerHearts() {   
+    public void drawGameOverScreen() {
+        g2.setColor(new Color(0, 0, 0, 150));
+        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+
+        int x;
+        int y;
+        String text;
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 110f));
+
+        text = "You Died";
+        g2.setColor(Color.black);
+        x = getCenteredText(text);
+        y = gp.tileSize * 4;
+        g2.drawString(text, x, y);
+        // main
+        g2.setColor(Color.white);
+        g2.drawString(text, x - 4, y - 4);
+
+        // retry
+        g2.setFont(g2.getFont().deriveFont(50f));
+        text = "Retry";
+        x = getCenteredText(text);
+        y += gp.tileSize * 4;
+        g2.drawString(text, x, y);
+        if (commandNum == 0) {
+            g2.drawString(">", x - 40, y);
+        }
+        // back to menu
+
+        text = "Main Menu";
+        x = getCenteredText(text);
+        y += 55;
+        g2.drawString(text, x, y);
+        if (commandNum == 1) {
+            g2.drawString(">", x - 40, y);
+        }
+        // back to menu
+
+    }
+
+    public void drawPlayerHearts() {
         int x = gp.tileSize / 2;
         int y = gp.tileSize / 2;
         int i = 0;
 
         // Draw max life
-        while(i < gp.player.maxLife / 2) {
+        while (i < gp.player.maxLife / 2) {
             g2.drawImage(heartBlank, x, y, null);
             i++;
             x += gp.tileSize;
@@ -123,23 +169,23 @@ public class UserInterface {
         }
 
         // draw max mana
-        x = (gp.tileSize/2)-5;
-        y = (int)(gp.tileSize*1.5);
+        x = (gp.tileSize / 2) - 5;
+        y = (int) (gp.tileSize * 1.5);
         i = 0;
-        while(i < gp.player.maxMana) {
+        while (i < gp.player.maxMana) {
             g2.drawImage(crystalBlank, x, y, null);
             i++;
             x += 35;
         }
 
         // draw mana
-        x = (gp.tileSize/2)-5;
-        y = (int)(gp.tileSize*1.5);
+        x = (gp.tileSize / 2) - 5;
+        y = (int) (gp.tileSize * 1.5);
         i = 0;
         while (i < gp.player.mana) {
             g2.drawImage(crystalFull, x, y, null);
             i++;
-            x+= 35;
+            x += 35;
         }
     }
 
@@ -170,52 +216,52 @@ public class UserInterface {
 
     public void drawTitleScreen() {
 
-        g2.setColor(new Color(0,0,0));
-        g2.fillRect(0,0, gp.screenWidth, gp.screenHeight);
+        g2.setColor(new Color(0, 0, 0));
+        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 
         // set title name
-        g2.setFont(g2.getFont().deriveFont(Font.BOLD,80F));
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 80F));
         String text = "Soulbound Savior";
         int x = getCenteredText(text);
-        int y = gp.tileSize*3;
+        int y = gp.tileSize * 3;
 
         // shadow
         g2.setColor(Color.gray);
-        g2.drawString(text, x+3, y+3);
+        g2.drawString(text, x + 3, y + 3);
         // draw title
         g2.setColor(Color.white);
         g2.drawString(text, x, y);
 
         // player icon
-        x = gp.screenWidth/2 - (gp.tileSize*2/2);
-        y += gp.tileSize*2;
-        g2.drawImage(gp.player.down1, x, y, gp.tileSize*2, gp.tileSize*2, null);
+        x = gp.screenWidth / 2 - (gp.tileSize * 2 / 2);
+        y += gp.tileSize * 2;
+        g2.drawImage(gp.player.down1, x, y, gp.tileSize * 2, gp.tileSize * 2, null);
 
         // menu
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 40F));
 
         text = "NEW GAME";
         x = getCenteredText(text);
-        y += gp.tileSize*3.5;
+        y += gp.tileSize * 3.5;
         g2.drawString(text, x, y);
-        if(commandNum == 0) {
-            g2.drawString(">", x-gp.tileSize, y);
+        if (commandNum == 0) {
+            g2.drawString(">", x - gp.tileSize, y);
         }
-    
+
         text = "LOAD GAME";
         x = getCenteredText(text);
         y += gp.tileSize;
         g2.drawString(text, x, y);
-        if(commandNum == 1) {
-            g2.drawString(">", x-gp.tileSize, y);
+        if (commandNum == 1) {
+            g2.drawString(">", x - gp.tileSize, y);
         }
 
         text = "QUIT";
         x = getCenteredText(text);
         y += gp.tileSize;
         g2.drawString(text, x, y);
-        if(commandNum == 2) {
-            g2.drawString(">", x-gp.tileSize, y);
+        if (commandNum == 2) {
+            g2.drawString(">", x - gp.tileSize, y);
         }
     }
 
@@ -231,10 +277,10 @@ public class UserInterface {
     public void drawDialogueScreen() {
 
         // draw dialogue window
-        int x = gp.tileSize*2;
-        int y = gp.tileSize/2;
-        int width = gp.screenWidth - (gp.tileSize*4);
-        int height = gp.tileSize*4;
+        int x = gp.tileSize * 2;
+        int y = gp.tileSize / 2;
+        int width = gp.screenWidth - (gp.tileSize * 4);
+        int height = gp.tileSize * 4;
 
         drawSubWindow(x, y, width, height);
 
@@ -242,7 +288,7 @@ public class UserInterface {
         x += gp.tileSize;
         y += gp.tileSize;
 
-        for(String line : currentDialogue.split("\n")) {
+        for (String line : currentDialogue.split("\n")) {
             g2.drawString(line, x, y);
             y += 40;
         }
@@ -370,11 +416,12 @@ public class UserInterface {
 
         // draw player's items
         for (int i = 0; i < gp.player.inventory.size(); i++) {
-            if (gp.player.inventory.get(i) == gp.player.currentWeapon || gp.player.inventory.get(i) == gp.player.currentShield) {
+            if (gp.player.inventory.get(i) == gp.player.currentWeapon
+                    || gp.player.inventory.get(i) == gp.player.currentShield) {
                 g2.setColor(new Color(240, 190, 90));
                 g2.fillRoundRect(slotX, slotY, gp.tileSize, gp.tileSize, 10, 10);
             }
-            
+
             g2.drawImage(gp.player.inventory.get(i).down1, slotX, slotY, null);
             slotX += slotSize;
 
@@ -424,25 +471,25 @@ public class UserInterface {
     }
 
     public void drawSubWindow(int x, int y, int width, int height) {
-        Color c = new Color(0,0,0,200);
+        Color c = new Color(0, 0, 0, 200);
         g2.setColor(c);
         g2.fillRoundRect(x, y, width, height, 35, 35);
 
-        c = new Color(255,255,255,200);
+        c = new Color(255, 255, 255, 200);
         g2.setColor(c);
         g2.setStroke(new BasicStroke(5));
-        g2.drawRoundRect(x+5, y+5, width-10, height-10, 25, 25);
+        g2.drawRoundRect(x + 5, y + 5, width - 10, height - 10, 25, 25);
     }
 
     public int getCenteredText(String text) {
-        int length = (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth();
+        int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         int x = gp.screenWidth / 2 - length / 2;
 
         return x;
     }
 
     public int getAlignedToRightText(String text, int tailX) {
-        int length = (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth();
+        int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         int x = tailX - length;
 
         return x;
