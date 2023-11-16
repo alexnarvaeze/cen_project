@@ -10,6 +10,7 @@ import main.GamePanel;
 import main.KeyHandler;
 import object.ObjectFireball;
 import object.ObjectKey;
+import object.ObjectRock;
 import object.ObjectShieldWood;
 import object.ObjectSwordNormal;
 
@@ -59,6 +60,8 @@ public class Player extends Entity {
         level = 1;
         maxLife = 6; // a half heart is 1 life, so 6 lives is 3 hearts
         life = maxLife;
+        maxMana = 4;
+        mana = maxMana;
         strength = 1; // more strength = more damage given
         dexterity = 1; // more dexterity = less damage taken
         exp = 0;
@@ -185,9 +188,13 @@ public class Player extends Entity {
             }
         }
 
-        if(gp.keyH.shotKeyPressed == true && projectile.alive == false && shotAvailableCounter == 30) {
+        if(gp.keyH.shotKeyPressed == true && projectile.alive == false 
+            && shotAvailableCounter == 30 && projectile.haveResource(this) == true) {
             // set default coordinates, direction and user
             projectile.set(worldX, worldY, direction, true, this);
+
+            // substract the cost
+            projectile.substractResource(this);
 
             // add it to the list
             gp.projectileList.add(projectile);

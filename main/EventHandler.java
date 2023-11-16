@@ -83,8 +83,9 @@ public class EventHandler {
             gp.gameState = gameState;
             gp.player.attackCancel = true;
             gp.soundEffect.play(2, false);
-            gp.ui.currentDialogue = "You feel refreshed.\nYour life has been recovered.";
+            gp.ui.currentDialogue = "You feel refreshed.\nYour life and mana have been \nrecovered.";
             gp.player.life = gp.player.maxLife;
+            gp.player.mana = gp.player.maxMana;
             gp.aSetter.setMonster();
         }
     }
