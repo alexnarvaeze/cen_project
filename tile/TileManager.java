@@ -14,16 +14,16 @@ import java.awt.Graphics2D;
 public class TileManager {
     GamePanel gp;
     public Tile[] tile;
-    public int mapTileNum[][][];
+    public int mapTileNum[][];
 
     public TileManager(GamePanel gp) {
         this.gp = gp;
 
         tile = new Tile[60];
-        mapTileNum = new int[gp.maxMap][gp.maxWorldCol][gp.maxWorldRow];
+        mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
 
         getTileImage();
-        loadMap("/res/maps/worldV2.txt", 0);
+        loadMap("/res/maps/worldV2.txt");
     }
 
     public void getTileImage() {
@@ -136,7 +136,7 @@ public class TileManager {
         }
     }
 
-    public void loadMap(String filePath, int map) {
+    public void loadMap(String filePath) {
         try {
             InputStream is = getClass().getResourceAsStream(filePath);
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -149,7 +149,7 @@ public class TileManager {
                     String numbers[] = line.split(" ");
                     int num = Integer.parseInt(numbers[col]);
 
-                    mapTileNum[map][col][row] = num;
+                    mapTileNum[col][row] = num;
                     col++;
                 }
                 if (col == gp.maxWorldCol) {
@@ -169,7 +169,7 @@ public class TileManager {
         
 
         while(worldCol < gp.maxWorldCol && worldRow < gp.maxWorldRow) {
-            int tileNum = mapTileNum[gp.currentMap][worldCol][worldRow];
+            int tileNum = mapTileNum[worldCol][worldRow];
 
             int worldX = worldCol * gp.tileSize;
             int worldY = worldRow * gp.tileSize;

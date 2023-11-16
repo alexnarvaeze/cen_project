@@ -31,7 +31,6 @@ public class Entity {
     public boolean collisionOn = false;
     public boolean invincible = false;
     int dialogueIndex = 0;
-    public boolean knockback = false;
 
     //counter
     public int spriteCounter = 0;
@@ -40,7 +39,6 @@ public class Entity {
     public int shotAvailableCounter = 0;
     int dyingCounter = 0;
     int hpBarCounter = 0;
-    int knockbackCounter = 0;
 
     public boolean collision = false;
     boolean attacking = false;
@@ -48,9 +46,8 @@ public class Entity {
     public boolean dying = false;
     boolean hpBarOn = false;
 
-    // Character attributes
+    // Character Status
     public int speed;
-    public int defaultSpeed;
     public String name;
     public int maxLife;
     public int life;
@@ -93,62 +90,43 @@ public class Entity {
 
     public void damageReaction() {}
 
-    public void checkCollision() {
-
-        collisionOn = false;
-
-            gp.cChecker.checkTile(this);
-            gp.cChecker.checkObject(this, false);
-            gp.cChecker.checkEntity(this, gp.npc);
-            gp.cChecker.checkEntity(this, gp.monster);
-            boolean contactPlayer = gp.cChecker.checkPlayer(this);
-
-            if (this.type == typeMonster && contactPlayer == true) {
-                damagePlayer(attack);
-            }
-    }
-
     public void use(Entity entity) {}
 
     public void update() {
+        setAction();
+        collisionOn = false;
+        gp.cChecker.checkTile(this);
+        gp.cChecker.checkObject(this, false);
+        gp.cChecker.checkEntity(this, gp.npc);
+        gp.cChecker.checkEntity(this, gp.monster);
+        boolean contactPlayer = gp.cChecker.checkPlayer(this);
 
-        if(knockback == true) {
-            
-            checkCollision();
-            if(collisionOn == true) {
-                knockbackCounter = 0;
-                knockback = false;
-                speed = defaultSpeed;
-            } else if(collisionOn = false) {
-                switch (gp.player.direction) {
-                    case "up": worldY -= speed; break;
-                    case "down": worldY += speed; break;
-                    case "left": worldX -= speed; break;
-                    case "right": worldX += speed; break;  
-                    default: break;
-                }
-            }
-            knockbackCounter++;
-            if(knockbackCounter == 100) {
-                knockbackCounter = 0;
-                knockback = false;
-                speed = defaultSpeed;
-            }
-        } else {
-            setAction();
-            checkCollision();
-
-            if (collisionOn == false) {
-                switch (direction) {
-                    case "up": worldY -= speed; break;
-                    case "down": worldY += speed; break;
-                    case "left": worldX -= speed; break;
-                    case "right": worldX += speed; break;  
-                    default: break;
-                }
-            }
+        if (this.type == typeMonster && contactPlayer == true) {
+            damagePlayer(attack);
         }
 
+        if (collisionOn == false) {
+            switch (direction) {
+                case "up":
+                    worldY -= speed;
+                    break;
+
+                case "down":
+                    worldY += speed;
+                    break;
+
+                case "left":
+                    worldX -= speed;
+                    break;
+
+                case "right":
+                    worldX += speed;
+                    break;
+
+                default:
+                    break;
+            }
+        }
 
         spriteCounter++;
         if (spriteCounter > 12) {
@@ -242,7 +220,7 @@ public class Entity {
                 dyingAnimation(g2);
             }
 
-            g2.drawImage(image, screenX, screenY, null);
+            g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
             changeAlpha(g2, 1f);
 
         }
@@ -299,10 +277,18 @@ public class Entity {
         dialogueIndex++;
 
         switch (gp.player.direction) {
-            case "up": direction = "down"; break;
-            case "down": direction = "up"; break;
-            case "right": direction = "left"; break;
-            case "left": direction = "right"; break;
+            case "up":
+                direction = "down";
+                break;
+            case "down":
+                direction = "up";
+                break;
+            case "right":
+                direction = "left";
+                break;
+            case "left":
+                direction = "right";
+                break;
         }
     }
 }
