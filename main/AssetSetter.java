@@ -2,7 +2,9 @@ package main;
 
 // import object.*;
 import entity.*;
+import monster.MON_Bat;
 import monster.MON_GreenSlime;
+import monster.MON_Zombie;
 import object.ObjectAxe;
 import object.ObjectKey;
 import object.ObjectPotion;
@@ -22,12 +24,12 @@ public class AssetSetter {
         gp.obj[i].worldY = gp.tileSize * 23;
         i++;
 
-        gp.obj[i] = new ObjectKey(gp);
+        gp.obj[i] = new ObjectPotion(gp);
         gp.obj[i].worldX = gp.tileSize * 21;
         gp.obj[i].worldY = gp.tileSize * 19;
         i++;
 
-        gp.obj[i] = new ObjectKey(gp);
+        gp.obj[i] = new ObjectPotion(gp);
         gp.obj[i].worldX = gp.tileSize * 26;
         gp.obj[i].worldY = gp.tileSize * 21;
         i++;
@@ -81,6 +83,46 @@ public class AssetSetter {
         gp.monster[i] = new MON_GreenSlime(gp);
         gp.monster[i].worldX = gp.tileSize * 38;
         gp.monster[i].worldY = gp.tileSize * 42;
+        i++;
+
+        gp.monster[i] = new MON_Zombie(gp);
+        gp.monster[i].worldX = gp.tileSize * 38;
+        gp.monster[i].worldY = gp.tileSize * 42;
+        i++;
+
+        gp.monster[i] = new MON_Zombie(gp);
+        gp.monster[i].worldX = gp.tileSize * 35;
+        gp.monster[i].worldY = gp.tileSize * 8;
+        i++;
+
+        gp.monster[i] = new MON_Zombie(gp);
+        gp.monster[i].worldX = gp.tileSize * 40;
+        gp.monster[i].worldY = gp.tileSize * 9;
+        i++;
+
+        gp.monster[i] = new MON_Zombie(gp);
+        gp.monster[i].worldX = gp.tileSize * 35;
+        gp.monster[i].worldY = gp.tileSize * 10;
+        i++;
+
+        gp.monster[i] = new MON_Zombie(gp);
+        gp.monster[i].worldX = gp.tileSize * 12;
+        gp.monster[i].worldY = gp.tileSize * 33;
+        i++;
+
+        gp.monster[i] = new MON_Bat(gp);
+        gp.monster[i].worldX = gp.tileSize * 11;
+        gp.monster[i].worldY = gp.tileSize * 32;
+        i++;
+
+        gp.monster[i] = new MON_Bat(gp);
+        gp.monster[i].worldX = gp.tileSize * 41;
+        gp.monster[i].worldY = gp.tileSize * 10;
+        i++;
+
+        gp.monster[i] = new MON_Bat(gp);
+        gp.monster[i].worldX = gp.tileSize * 22;
+        gp.monster[i].worldY = gp.tileSize * 39;
         i++;
     }
 }

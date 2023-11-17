@@ -248,14 +248,6 @@ public class UserInterface {
             g2.drawString(">", x - gp.tileSize, y);
         }
 
-        text = "LOAD GAME";
-        x = getCenteredText(text);
-        y += gp.tileSize;
-        g2.drawString(text, x, y);
-        if (commandNum == 1) {
-            g2.drawString(">", x - gp.tileSize, y);
-        }
-
         text = "QUIT";
         x = getCenteredText(text);
         y += gp.tileSize;
